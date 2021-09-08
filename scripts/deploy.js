@@ -1,4 +1,6 @@
 const hre = require("hardhat");
+const fs = require("fs");
+const path = require("path");
 
 async function main() {
   const Greeter = await hre.ethers.getContractFactory("Greeter");
@@ -14,6 +16,21 @@ async function main() {
   await token.deployed();
 
   console.log("Token deployed to:", token.address);
+
+  let Contracts = {
+    "Greeter": greeter,
+    "Token": token
+  };
+
+  const data = JSON.stringify(Contracts);
+
+  fs.writeFileSync(path.join(__dirname, "..", "src", 'contracts.json'), data, 'utf8', (err) => {
+    if (err) {
+      console.log(`Error writing file: ${err}`);
+    } else {
+      console.log(`File is written successfully!`);
+    }
+  });
 }
 
 main()
